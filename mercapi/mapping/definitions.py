@@ -897,7 +897,9 @@ mapping_definitions: Dict[Type[ResponseModel], ResponseMappingDefinition] = {
             ),
             ResponseProperty("shopName", "shop_name", Extractors.get("shopName")),
             ResponseProperty(
-                "itemSize", "item_size", Extractors.get_as_model("itemSize", ItemSize)
+                "itemSize",
+                "item_size",
+                Extractors.get_as_model("itemSize", ItemSize),
             ),
             ResponseProperty(
                 "photos", "photos", Extractors.get_list_of_model("photos", PhotoUri)
