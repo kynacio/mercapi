@@ -1147,19 +1147,24 @@ mapping_definitions: Dict[Type[ResponseModel], ResponseMappingDefinition] = {
         optional_properties=[],
     ),
     ProductStats: R(
-        required_properties=[],
-        optional_properties=[
-            ResponseProperty("viewCount", "view_count", Extractors.get("viewCount")),
-            ResponseProperty("likeCount", "like_count", Extractors.get("likeCount")),
+        required_properties=[
+            ResponseProperty("productId", "product_id", Extractors.get("productId")),
+            ResponseProperty("score", "score", Extractors.get("score")),
+            ResponseProperty("reviewCount", "review_count", Extractors.get("reviewCount")),
+            ResponseProperty("likesCount", "likes_count", Extractors.get("likesCount")),
         ],
+        optional_properties=[],
     ),
     TimeSaleDetails: R(
         required_properties=[
-            ResponseProperty("saleId", "sale_id", Extractors.get("saleId")),
+            ResponseProperty("name", "name", Extractors.get("name")),
+            ResponseProperty("percentage", "percentage", Extractors.get("percentage")),
+            ResponseProperty("price", "price", Extractors.get("price")),
             ResponseProperty("startTime", "start_time", Extractors.get("startTime")),
             ResponseProperty("endTime", "end_time", Extractors.get("endTime")),
-            ResponseProperty("originalPrice", "original_price", Extractors.get("originalPrice")),
-            ResponseProperty("salePrice", "sale_price", Extractors.get("salePrice")),
+            ResponseProperty("base", "base", Extractors.get("base")),
+            ResponseProperty("calculationStartTime", "calculation_start_time", Extractors.get("calculationStartTime")),
+            ResponseProperty("calculationEndTime", "calculation_end_time", Extractors.get("calculationEndTime")),
         ],
         optional_properties=[],
     ),
