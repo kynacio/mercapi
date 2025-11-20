@@ -180,17 +180,48 @@ class Promotion(ResponseModel):
 
 @dataclass
 class ProductStats(ResponseModel):
-    view_count: Optional[str] = None
-    like_count: Optional[str] = None
+    """Product statistics including likes and reviews."""
+
+    product_id: str
+    """Product identifier"""
+
+    score: int
+    """Product score/rating"""
+
+    review_count: int
+    """Number of reviews"""
+
+    likes_count: int
+    """Number of likes"""
 
 
 @dataclass
 class TimeSaleDetails(ResponseModel):
-    sale_id: str
+    """Time-limited sale information including discount percentage and pricing."""
+
+    name: str
+    """Sale identifier/name"""
+
+    percentage: int
+    """Discount percentage"""
+
+    price: str
+    """Sale price in yen"""
+
     start_time: str
+    """Sale start time (ISO 8601 format)"""
+
     end_time: str
-    original_price: str
-    sale_price: str
+    """Sale end time (ISO 8601 format)"""
+
+    base: str
+    """Base price type (e.g., 'STABLE_PRICE')"""
+
+    calculation_start_time: str
+    """Price calculation start time (ISO 8601 format)"""
+
+    calculation_end_time: str
+    """Price calculation end time (ISO 8601 format)"""
 
 
 @dataclass

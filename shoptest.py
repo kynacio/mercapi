@@ -143,19 +143,21 @@ async def main():
         # Product Stats
         if detail.product_stats:
             print(f"\n📊 PRODUCT STATISTICS")
-            if hasattr(detail.product_stats, 'view_count') and detail.product_stats.view_count:
-                print(f"  View Count: {detail.product_stats.view_count}")
-            if hasattr(detail.product_stats, 'like_count') and detail.product_stats.like_count:
-                print(f"  Like Count: {detail.product_stats.like_count}")
+            print(f"  Product ID: {detail.product_stats.product_id}")
+            print(f"  Score: {detail.product_stats.score}")
+            print(f"  Review Count: {detail.product_stats.review_count}")
+            print(f"  Likes Count: {detail.product_stats.likes_count}")
 
         # Time Sale Details
         if detail.time_sale_details:
             print(f"\n⏰ TIME SALE")
-            print(f"  Sale ID: {detail.time_sale_details.sale_id}")
-            print(f"  Sale Price: ¥{detail.time_sale_details.sale_price}")
-            print(f"  Original Price: ¥{detail.time_sale_details.original_price}")
+            print(f"  Name: {detail.time_sale_details.name if detail.time_sale_details.name else '(no name)'}")
+            print(f"  Discount Percentage: {detail.time_sale_details.percentage}%")
+            print(f"  Sale Price: ¥{detail.time_sale_details.price}")
+            print(f"  Base: {detail.time_sale_details.base}")
             print(f"  Start: {detail.time_sale_details.start_time}")
             print(f"  End: {detail.time_sale_details.end_time}")
+            print(f"  Calculation Period: {detail.time_sale_details.calculation_start_time} to {detail.time_sale_details.calculation_end_time}")
 
         # Variants
         print(f"\n📦 VARIANTS")
