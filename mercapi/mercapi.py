@@ -10,6 +10,7 @@ from httpx import Request
 from mercapi.mapping import map_to_class
 from mercapi.models import SearchResults, Item, Profile, Items
 from mercapi.models.base import ResponseModel
+from mercapi.models.shop import ShopProduct
 from mercapi.requests import SearchRequestData
 from mercapi.util import jwt
 
@@ -215,6 +216,31 @@ class Mercapi:
                 "limit": 30,
                 "status": "on_sale,trading,sold_out",
             },
+            headers=self._headers,
+        )
+        return self._sign_request(req)
+
+    async def shop_product(self, product_id: str, view: str = "FULL", image_type: str = "JPEG") -> Optional[ShopProduct]:
+        """Fetch details of a single shop product listing.
+        This method reflects the action of loading a shop product view.
+
+        :param product_id: id of a shop product
+        :param view: view type (default: "FULL")
+        :param image_type: image type (default: "JPEG")
+        :return: all available shop product properties
+        """
+        res = await self._client.send(self._shop_product(product_id, view, image_type))
+        if res.status_code == 404:
+            return None
+
+        body = res.json()
+        return map_to_class(body, ShopProduct)
+
+    def _shop_product(self, product_id: str, view: str = "FULL", image_type: str = "JPEG") -> Request:
+        req = Request(
+            "GET",
+            f"https://api.mercari.jp/v1/marketplaces/shops/products/{product_id}",
+            params={"view": view, "imageType": image_type},
             headers=self._headers,
         )
         return self._sign_request(req)

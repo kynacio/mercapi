@@ -14,6 +14,14 @@ from mercapi.models.item.data import (
     Color,
     Seller,
     Comment,
+    Requester,
+    ItemSize,
+    ItemBrand,
+    ItemAttribute,
+    Defpay,
+    PricePromotionAreaDetails,
+    EstimateInfo,
+    ParentCategoryNtier,
 )
 
 
@@ -62,3 +70,20 @@ class Item(ResponseModel):
     has_additional_service: bool
     has_like_list: bool
     is_offerable_v2: bool
+    requester: Requester
+    item_size: ItemSize
+    item_brand: ItemBrand
+    item_category_ntiers: ItemCategorySummary
+    parent_categories_ntiers: List[ParentCategoryNtier]
+    registered_prices_count: int
+    promotion_explanation_message: str
+    hash_tags: List[str]
+    item_attributes: List[ItemAttribute]
+    is_dismissed: bool
+    photo_descriptions: List[str]
+    has_active_mercard: str
+    defpay: Defpay
+    meta_title: str
+    meta_subtitle: str
+    price_promotion_area_details: PricePromotionAreaDetails
+    estimate_info: EstimateInfo

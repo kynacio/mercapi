@@ -28,3 +28,5 @@ class ItemCategorySummary(ResponseModel):
     parent_category_name: str
     root_category_id: int
     root_category_name: str
+    size_group_id: int
+    brand_group_id: int
