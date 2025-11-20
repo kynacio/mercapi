@@ -15,6 +15,25 @@ from mercapi.models.item.data import (
     ShippingClass,
     Comment,
 )
+from mercapi.models.shop import (
+    ShopProduct,
+    ProductDetail,
+    Shop,
+    ShopStats,
+    ShopItem,
+    ShopCategory,
+    ShopBrand,
+    ShopCondition,
+    ShopShippingMethod,
+    ShopShippingPayer,
+    ShopShippingDuration,
+    ShopShippingFromArea,
+    Promotion,
+    PromotionAction,
+    Variant,
+    RealCardReward,
+    MercardCampaign,
+)
 from mercapi.util.errors import ParseAPIResponseError
 from mercapi.models.base import ResponseModel
 from mercapi.models.profile.items import SellerItem
@@ -80,6 +99,13 @@ class Extractors:
     @staticmethod
     def get_datetime(key: str) -> ExtractorDef[datetime]:
         return Extractors.get_with(key, lambda x: datetime.fromtimestamp(float(x)))
+
+    @staticmethod
+    def get_iso_datetime(key: str) -> ExtractorDef[datetime]:
+        """Parse ISO 8601 datetime strings (e.g., '2025-11-20T01:27:24Z')"""
+        return Extractors.get_with(
+            key, lambda x: datetime.fromisoformat(x.replace("Z", "+00:00"))
+        )
 
     @staticmethod
     def __import_class(model: str) -> Type[ResponseModel]:
@@ -651,6 +677,300 @@ mapping_definitions: Dict[Type[ResponseModel], ResponseMappingDefinition] = {
                 "root_category_name",
                 "root_category_name",
                 Extractors.get("root_category_name"),
+            ),
+        ],
+    ),
+    # Shop Product Models
+    ShopProduct: R(
+        required_properties=[
+            ResponseProperty("name", "name", Extractors.get("name")),
+            ResponseProperty("displayName", "display_name", Extractors.get("displayName")),
+            ResponseProperty("price", "price", Extractors.get("price")),
+            ResponseProperty("createTime", "create_time", Extractors.get_iso_datetime("createTime")),
+            ResponseProperty("updateTime", "update_time", Extractors.get_iso_datetime("updateTime")),
+        ],
+        optional_properties=[
+            ResponseProperty("productTags", "product_tags", Extractors.get("productTags")),
+            ResponseProperty("thumbnail", "thumbnail", Extractors.get("thumbnail")),
+            ResponseProperty("attributes", "attributes", Extractors.get("attributes")),
+            ResponseProperty(
+                "productDetail",
+                "product_detail",
+                Extractors.get_as_model("productDetail", ProductDetail),
+            ),
+        ],
+    ),
+    ProductDetail: R(
+        required_properties=[
+            ResponseProperty("shop", "shop", Extractors.get_as_model("shop", Shop)),
+            ResponseProperty("photos", "photos", Extractors.get("photos")),
+            ResponseProperty("description", "description", Extractors.get("description")),
+        ],
+        optional_properties=[
+            ResponseProperty(
+                "categories",
+                "categories",
+                Extractors.get_list_of_model("categories", ShopCategory),
+            ),
+            ResponseProperty("brand", "brand", Extractors.get_as_model("brand", ShopBrand)),
+            ResponseProperty(
+                "condition", "condition", Extractors.get_as_model("condition", ShopCondition)
+            ),
+            ResponseProperty(
+                "shippingMethod",
+                "shipping_method",
+                Extractors.get_as_model("shippingMethod", ShopShippingMethod),
+            ),
+            ResponseProperty(
+                "shippingPayer",
+                "shipping_payer",
+                Extractors.get_as_model("shippingPayer", ShopShippingPayer),
+            ),
+            ResponseProperty(
+                "shippingDuration",
+                "shipping_duration",
+                Extractors.get_as_model("shippingDuration", ShopShippingDuration),
+            ),
+            ResponseProperty(
+                "shippingFromArea",
+                "shipping_from_area",
+                Extractors.get_as_model("shippingFromArea", ShopShippingFromArea),
+            ),
+            ResponseProperty(
+                "promotions",
+                "promotions",
+                Extractors.get_list_of_model("promotions", Promotion),
+            ),
+            ResponseProperty("productStats", "product_stats", Extractors.get("productStats")),
+            ResponseProperty(
+                "timeSaleDetails", "time_sale_details", Extractors.get("timeSaleDetails")
+            ),
+            ResponseProperty(
+                "variants", "variants", Extractors.get_list_of_model("variants", Variant)
+            ),
+            ResponseProperty(
+                "shippingFeeConfig", "shipping_fee_config", Extractors.get("shippingFeeConfig")
+            ),
+            ResponseProperty(
+                "variationGrouping", "variation_grouping", Extractors.get("variationGrouping")
+            ),
+            ResponseProperty(
+                "buyerPromotion", "buyer_promotion", Extractors.get("buyerPromotion")
+            ),
+            ResponseProperty(
+                "followPromotion",
+                "follow_promotion",
+                Extractors.get_as_model("followPromotion", Promotion),
+            ),
+            ResponseProperty(
+                "lastPurchasedDateTime",
+                "last_purchased_date_time",
+                Extractors.get("lastPurchasedDateTime"),
+            ),
+            ResponseProperty(
+                "realCardReward",
+                "real_card_reward",
+                Extractors.get_as_model("realCardReward", RealCardReward),
+            ),
+            ResponseProperty(
+                "mercardCampaign",
+                "mercard_campaign",
+                Extractors.get_as_model("mercardCampaign", MercardCampaign),
+            ),
+            ResponseProperty("seoMetadata", "seo_metadata", Extractors.get("seoMetadata")),
+            ResponseProperty(
+                "productPreOrder", "product_pre_order", Extractors.get("productPreOrder")
+            ),
+        ],
+    ),
+    Shop: R(
+        required_properties=[
+            ResponseProperty("name", "name", Extractors.get("name")),
+            ResponseProperty("displayName", "display_name", Extractors.get("displayName")),
+        ],
+        optional_properties=[
+            ResponseProperty("thumbnail", "thumbnail", Extractors.get("thumbnail")),
+            ResponseProperty(
+                "shopStats", "shop_stats", Extractors.get_as_model("shopStats", ShopStats)
+            ),
+            ResponseProperty(
+                "allowDirectMessage",
+                "allow_direct_message",
+                Extractors.get("allowDirectMessage"),
+            ),
+            ResponseProperty(
+                "shopItems", "shop_items", Extractors.get_list_of_model("shopItems", ShopItem)
+            ),
+            ResponseProperty("isInboundXb", "is_inbound_xb", Extractors.get("isInboundXb")),
+            ResponseProperty("badges", "badges", Extractors.get("badges")),
+            ResponseProperty(
+                "hasApprovedBrandScreening",
+                "has_approved_brand_screening",
+                Extractors.get("hasApprovedBrandScreening"),
+            ),
+        ],
+    ),
+    ShopStats: R(
+        required_properties=[
+            ResponseProperty("shopId", "shop_id", Extractors.get("shopId")),
+            ResponseProperty("score", "score", Extractors.get_as("score", int)),
+            ResponseProperty("reviewCount", "review_count", Extractors.get("reviewCount")),
+        ],
+        optional_properties=[],
+    ),
+    ShopItem: R(
+        required_properties=[
+            ResponseProperty("productId", "product_id", Extractors.get("productId")),
+            ResponseProperty("displayName", "display_name", Extractors.get("displayName")),
+            ResponseProperty("price", "price", Extractors.get("price")),
+        ],
+        optional_properties=[
+            ResponseProperty("productTags", "product_tags", Extractors.get("productTags")),
+            ResponseProperty("thumbnail", "thumbnail", Extractors.get("thumbnail")),
+        ],
+    ),
+    ShopCategory: R(
+        required_properties=[
+            ResponseProperty("categoryId", "category_id", Extractors.get("categoryId")),
+            ResponseProperty("displayName", "display_name", Extractors.get("displayName")),
+        ],
+        optional_properties=[
+            ResponseProperty("parentId", "parent_id", Extractors.get("parentId")),
+            ResponseProperty("rootId", "root_id", Extractors.get("rootId")),
+            ResponseProperty("hasChild", "has_child", Extractors.get("hasChild")),
+        ],
+    ),
+    ShopBrand: R(
+        required_properties=[
+            ResponseProperty("brandId", "brand_id", Extractors.get("brandId")),
+            ResponseProperty("displayName", "display_name", Extractors.get("displayName")),
+        ],
+        optional_properties=[],
+    ),
+    ShopCondition: R(
+        required_properties=[
+            ResponseProperty("displayName", "display_name", Extractors.get("displayName")),
+        ],
+        optional_properties=[],
+    ),
+    ShopShippingMethod: R(
+        required_properties=[
+            ResponseProperty(
+                "shippingMethodId", "shipping_method_id", Extractors.get("shippingMethodId")
+            ),
+            ResponseProperty("displayName", "display_name", Extractors.get("displayName")),
+        ],
+        optional_properties=[
+            ResponseProperty("isAnonymous", "is_anonymous", Extractors.get("isAnonymous")),
+        ],
+    ),
+    ShopShippingPayer: R(
+        required_properties=[
+            ResponseProperty(
+                "shippingPayerId", "shipping_payer_id", Extractors.get("shippingPayerId")
+            ),
+            ResponseProperty("displayName", "display_name", Extractors.get("displayName")),
+        ],
+        optional_properties=[
+            ResponseProperty("code", "code", Extractors.get("code")),
+        ],
+    ),
+    ShopShippingDuration: R(
+        required_properties=[
+            ResponseProperty(
+                "shippingDurationId",
+                "shipping_duration_id",
+                Extractors.get("shippingDurationId"),
+            ),
+            ResponseProperty("displayName", "display_name", Extractors.get("displayName")),
+        ],
+        optional_properties=[
+            ResponseProperty("minDays", "min_days", Extractors.get_as("minDays", int)),
+            ResponseProperty("maxDays", "max_days", Extractors.get_as("maxDays", int)),
+        ],
+    ),
+    ShopShippingFromArea: R(
+        required_properties=[
+            ResponseProperty(
+                "shippingAreaCode", "shipping_area_code", Extractors.get("shippingAreaCode")
+            ),
+            ResponseProperty("displayName", "display_name", Extractors.get("displayName")),
+        ],
+        optional_properties=[],
+    ),
+    Promotion: R(
+        required_properties=[
+            ResponseProperty("displayName", "display_name", Extractors.get("displayName")),
+        ],
+        optional_properties=[
+            ResponseProperty(
+                "action", "action", Extractors.get_as_model("action", PromotionAction)
+            ),
+        ],
+    ),
+    PromotionAction: R(
+        required_properties=[
+            ResponseProperty("action", "action", Extractors.get("action")),
+        ],
+        optional_properties=[
+            ResponseProperty("discountType", "discount_type", Extractors.get("discountType")),
+            ResponseProperty("discountValue", "discount_value", Extractors.get("discountValue")),
+            ResponseProperty("returnType", "return_type", Extractors.get("returnType")),
+            ResponseProperty("couponType", "coupon_type", Extractors.get("couponType")),
+            ResponseProperty(
+                "maxReturnAmount", "max_return_amount", Extractors.get("maxReturnAmount")
+            ),
+            ResponseProperty("returnText", "return_text", Extractors.get("returnText")),
+            ResponseProperty("discountAmount", "discount_amount", Extractors.get("discountAmount")),
+            ResponseProperty(
+                "discountedPrice", "discounted_price", Extractors.get("discountedPrice")
+            ),
+        ],
+    ),
+    Variant: R(
+        required_properties=[
+            ResponseProperty("variantId", "variant_id", Extractors.get("variantId")),
+        ],
+        optional_properties=[
+            ResponseProperty("displayName", "display_name", Extractors.get("displayName")),
+            ResponseProperty("quantity", "quantity", Extractors.get("quantity")),
+            ResponseProperty("size", "size", Extractors.get("size")),
+            ResponseProperty("attributes", "attributes", Extractors.get("attributes")),
+        ],
+    ),
+    RealCardReward: R(
+        required_properties=[],
+        optional_properties=[
+            ResponseProperty("rewardAmount", "reward_amount", Extractors.get("rewardAmount")),
+            ResponseProperty(
+                "hasActiveCard", "has_active_card", Extractors.get("hasActiveCard")
+            ),
+            ResponseProperty("hasMvno", "has_mvno", Extractors.get("hasMvno")),
+            ResponseProperty(
+                "rewardRate", "reward_rate", Extractors.get_as("rewardRate", float)
+            ),
+            ResponseProperty("lpUri", "lp_uri", Extractors.get("lpUri")),
+            ResponseProperty(
+                "estimateRewardText", "estimate_reward_text", Extractors.get("estimateRewardText")
+            ),
+            ResponseProperty(
+                "disclaimerText", "disclaimer_text", Extractors.get("disclaimerText")
+            ),
+            ResponseProperty("showComponent", "show_component", Extractors.get("showComponent")),
+        ],
+    ),
+    MercardCampaign: R(
+        required_properties=[],
+        optional_properties=[
+            ResponseProperty("id", "id_", Extractors.get("id")),
+            ResponseProperty("title", "title", Extractors.get("title")),
+            ResponseProperty("uri", "uri", Extractors.get("uri")),
+            ResponseProperty("text", "text", Extractors.get("text")),
+            ResponseProperty(
+                "discountAmount", "discount_amount", Extractors.get_as("discountAmount", int)
+            ),
+            ResponseProperty(
+                "maxDiscount", "max_discount", Extractors.get_as("maxDiscount", int)
             ),
         ],
     ),

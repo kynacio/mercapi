@@ -10,6 +10,7 @@ from httpx import Request
 from mercapi.mapping import map_to_class
 from mercapi.models import SearchResults, Item, Profile, Items
 from mercapi.models.base import ResponseModel
+from mercapi.models.shop import ShopProduct
 from mercapi.requests import SearchRequestData
 from mercapi.util import jwt
 
@@ -215,6 +216,32 @@ class Mercapi:
                 "limit": 30,
                 "status": "on_sale,trading,sold_out",
             },
+            headers=self._headers,
+        )
+        return self._sign_request(req)
+
+    async def shop_product(self, product_id: str) -> Optional[ShopProduct]:
+        """Fetch details of a single Mercari Shop product.
+
+        This method is for fetching products from official Mercari Shops, which are
+        different from regular user-to-user marketplace items. Shop products have
+        additional features like promotions, variants, and official shop guarantees.
+
+        :param product_id: ID of a shop product (e.g., "2JHDxUxi3SsqAG5umbmWY2")
+        :return: all available shop product properties including shop info, photos, variants, etc.
+        """
+        res = await self._client.send(self._shop_product(product_id))
+        if res.status_code == 404:
+            return None
+
+        body = res.json()
+        return map_to_class(body, ShopProduct)
+
+    def _shop_product(self, product_id: str) -> Request:
+        req = Request(
+            "GET",
+            f"https://api.mercari.jp/v1/marketplaces/shops/products/{product_id}",
+            params={"view": "FULL", "imageType": "JPEG"},
             headers=self._headers,
         )
         return self._sign_request(req)
