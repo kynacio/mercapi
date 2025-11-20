@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from datetime import datetime
-from typing import List
+from typing import List, Optional
 
 from mercapi.models.base import ResponseModel
 from mercapi.models.common import ItemCategorySummary
@@ -14,6 +14,15 @@ from mercapi.models.item.data import (
     Color,
     Seller,
     Comment,
+    Requester,
+    ItemSize,
+    ItemBrand,
+    ParentCategoryNtier,
+    ItemCategoryNtiers,
+    ItemAttribute,
+    Defpay,
+    PricePromotionAreaDetails,
+    EstimateInfo,
 )
 
 
@@ -62,3 +71,22 @@ class Item(ResponseModel):
     has_additional_service: bool
     has_like_list: bool
     is_offerable_v2: bool
+    # New fields from updated API
+    requester: Optional[Requester] = None
+    item_category_ntiers: Optional[ItemCategoryNtiers] = None
+    parent_categories_ntiers: Optional[List[ParentCategoryNtier]] = None
+    item_size: Optional[ItemSize] = None
+    item_brand: Optional[ItemBrand] = None
+    registered_prices_count: Optional[int] = None
+    promotion_explanation_message: Optional[str] = None
+    hash_tags: Optional[List[str]] = None
+    additional_services: Optional[List[dict]] = None
+    item_attributes: Optional[List[ItemAttribute]] = None
+    is_dismissed: Optional[bool] = None
+    photo_descriptions: Optional[List[str]] = None
+    has_active_mercard: Optional[str] = None
+    defpay: Optional[Defpay] = None
+    meta_title: Optional[str] = None
+    meta_subtitle: Optional[str] = None
+    price_promotion_area_details: Optional[PricePromotionAreaDetails] = None
+    estimate_info: Optional[EstimateInfo] = None

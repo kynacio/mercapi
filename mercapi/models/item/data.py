@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from datetime import datetime
+from typing import List, Optional
 
 from mercapi.models.base import ResponseModel
 
@@ -26,12 +27,20 @@ class Seller(ResponseModel):
     is_official: bool
     quick_shipper: bool
     star_rating_score: int
+    is_followable: bool
+    is_blocked: bool
+
+
+@dataclass
+class Requester(ResponseModel):
+    created: datetime
 
 
 @dataclass
 class ItemCondition(ResponseModel):
     id_: int
     name: str
+    subname: Optional[str] = None
 
 
 @dataclass
@@ -97,3 +106,89 @@ class Comment(ResponseModel):
     message: str
     user: User
     created: datetime
+
+
+@dataclass
+class ItemSize(ResponseModel):
+    id_: int
+    name: str
+
+
+@dataclass
+class ItemBrand(ResponseModel):
+    id_: int
+    name: str
+    sub_name: str
+
+
+@dataclass
+class ParentCategoryNtier(ResponseModel):
+    id_: int
+    name: str
+    display_order: int
+
+
+@dataclass
+class ItemCategoryNtiers(ResponseModel):
+    id_: int
+    name: str
+    display_order: int
+    parent_category_id: int
+    parent_category_name: str
+    root_category_id: int
+    root_category_name: str
+    size_group_id: int
+    brand_group_id: int
+
+
+@dataclass
+class ItemAttributeValue(ResponseModel):
+    id_: str
+    text: str
+
+
+@dataclass
+class ItemAttribute(ResponseModel):
+    id_: str
+    text: str
+    values: List[ItemAttributeValue]
+    deep_facet_filterable: bool
+    show_on_ui: bool
+
+
+@dataclass
+class PromotionInstallment(ResponseModel):
+    message: str
+    campaign_message: str
+    campaign_url: str
+
+
+@dataclass
+class Defpay(ResponseModel):
+    calculated_price: int
+    is_easypay_heavy_user: bool
+    has_ever_used_installment_payment: bool
+    installment_monthly_amount: int
+    installment_times: int
+    promotion_installment: PromotionInstallment
+
+
+@dataclass
+class PromotionInfo(ResponseModel):
+    label_text: str
+    supplementary_text: str
+
+
+@dataclass
+class PricePromotionAreaDetails(ResponseModel):
+    promotion_type: str
+    promotion_info: List[PromotionInfo]
+
+
+@dataclass
+class EstimateInfo(ResponseModel):
+    total_rate: int
+    mercard_estimate_reward: int
+    estimate_reward_text: str
+    disclaimer_text: str
+    lp_url: str

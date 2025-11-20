@@ -14,6 +14,18 @@ from mercapi.models.item.data import (
     ShippingDuration,
     ShippingClass,
     Comment,
+    Requester,
+    ItemSize,
+    ItemBrand,
+    ParentCategoryNtier,
+    ItemCategoryNtiers,
+    ItemAttribute,
+    ItemAttributeValue,
+    Defpay,
+    PromotionInstallment,
+    PricePromotionAreaDetails,
+    PromotionInfo,
+    EstimateInfo,
 )
 from mercapi.util.errors import ParseAPIResponseError
 from mercapi.models.base import ResponseModel
@@ -223,6 +235,75 @@ mapping_definitions: Dict[Type[ResponseModel], ResponseMappingDefinition] = {
             ResponseProperty(
                 "is_offerable_v2", "is_offerable_v2", Extractors.get("is_offerable_v2")
             ),
+            # New fields from updated API
+            ResponseProperty(
+                "requester", "requester", Extractors.get_as_model("requester", Requester)
+            ),
+            ResponseProperty(
+                "item_category_ntiers",
+                "item_category_ntiers",
+                Extractors.get_as_model("item_category_ntiers", ItemCategoryNtiers),
+            ),
+            ResponseProperty(
+                "parent_categories_ntiers",
+                "parent_categories_ntiers",
+                Extractors.get_list_of_model("parent_categories_ntiers", ParentCategoryNtier),
+            ),
+            ResponseProperty(
+                "item_size", "item_size", Extractors.get_as_model("item_size", ItemSize)
+            ),
+            ResponseProperty(
+                "item_brand", "item_brand", Extractors.get_as_model("item_brand", ItemBrand)
+            ),
+            ResponseProperty(
+                "registered_prices_count",
+                "registered_prices_count",
+                Extractors.get("registered_prices_count"),
+            ),
+            ResponseProperty(
+                "promotion_explanation_message",
+                "promotion_explanation_message",
+                Extractors.get("promotion_explanation_message"),
+            ),
+            ResponseProperty("hash_tags", "hash_tags", Extractors.get("hash_tags")),
+            ResponseProperty(
+                "additional_services",
+                "additional_services",
+                Extractors.get("additional_services"),
+            ),
+            ResponseProperty(
+                "item_attributes",
+                "item_attributes",
+                Extractors.get_list_of_model("item_attributes", ItemAttribute),
+            ),
+            ResponseProperty("is_dismissed", "is_dismissed", Extractors.get("is_dismissed")),
+            ResponseProperty(
+                "photo_descriptions",
+                "photo_descriptions",
+                Extractors.get("photo_descriptions"),
+            ),
+            ResponseProperty(
+                "has_active_mercard",
+                "has_active_mercard",
+                Extractors.get("has_active_mercard"),
+            ),
+            ResponseProperty(
+                "defpay", "defpay", Extractors.get_as_model("defpay", Defpay)
+            ),
+            ResponseProperty("meta_title", "meta_title", Extractors.get("meta_title")),
+            ResponseProperty(
+                "meta_subtitle", "meta_subtitle", Extractors.get("meta_subtitle")
+            ),
+            ResponseProperty(
+                "price_promotion_area_details",
+                "price_promotion_area_details",
+                Extractors.get_as_model("price_promotion_area_details", PricePromotionAreaDetails),
+            ),
+            ResponseProperty(
+                "estimate_info",
+                "estimate_info",
+                Extractors.get_as_model("estimate_info", EstimateInfo),
+            ),
         ],
     ),
     Seller: R(
@@ -274,6 +355,12 @@ mapping_definitions: Dict[Type[ResponseModel], ResponseMappingDefinition] = {
                 "star_rating_score",
                 Extractors.get("star_rating_score"),
             ),
+            ResponseProperty(
+                "is_followable", "is_followable", Extractors.get("is_followable")
+            ),
+            ResponseProperty(
+                "is_blocked", "is_blocked", Extractors.get("is_blocked")
+            ),
         ],
     ),
     Seller.Ratings: R(
@@ -289,7 +376,9 @@ mapping_definitions: Dict[Type[ResponseModel], ResponseMappingDefinition] = {
             ResponseProperty("id", "id_", Extractors.get("id")),
             ResponseProperty("name", "name", Extractors.get("name")),
         ],
-        optional_properties=[],
+        optional_properties=[
+            ResponseProperty("subname", "subname", Extractors.get("subname")),
+        ],
     ),
     Color: R(
         required_properties=[
@@ -579,6 +668,110 @@ mapping_definitions: Dict[Type[ResponseModel], ResponseMappingDefinition] = {
             ),
             ResponseProperty("isNoPrice", "is_no_price", Extractors.get("isNoPrice")),
         ],
+    ),
+    Requester: R(
+        required_properties=[
+            ResponseProperty("created", "created", Extractors.get_datetime("created")),
+        ],
+        optional_properties=[],
+    ),
+    ItemSize: R(
+        required_properties=[
+            ResponseProperty("id", "id_", Extractors.get("id")),
+            ResponseProperty("name", "name", Extractors.get("name")),
+        ],
+        optional_properties=[],
+    ),
+    ItemBrand: R(
+        required_properties=[
+            ResponseProperty("id", "id_", Extractors.get("id")),
+            ResponseProperty("name", "name", Extractors.get("name")),
+            ResponseProperty("sub_name", "sub_name", Extractors.get("sub_name")),
+        ],
+        optional_properties=[],
+    ),
+    ParentCategoryNtier: R(
+        required_properties=[
+            ResponseProperty("id", "id_", Extractors.get("id")),
+            ResponseProperty("name", "name", Extractors.get("name")),
+            ResponseProperty("display_order", "display_order", Extractors.get("display_order")),
+        ],
+        optional_properties=[],
+    ),
+    ItemCategoryNtiers: R(
+        required_properties=[
+            ResponseProperty("id", "id_", Extractors.get("id")),
+            ResponseProperty("name", "name", Extractors.get("name")),
+        ],
+        optional_properties=[
+            ResponseProperty("display_order", "display_order", Extractors.get("display_order")),
+            ResponseProperty("parent_category_id", "parent_category_id", Extractors.get("parent_category_id")),
+            ResponseProperty("parent_category_name", "parent_category_name", Extractors.get("parent_category_name")),
+            ResponseProperty("root_category_id", "root_category_id", Extractors.get("root_category_id")),
+            ResponseProperty("root_category_name", "root_category_name", Extractors.get("root_category_name")),
+            ResponseProperty("size_group_id", "size_group_id", Extractors.get("size_group_id")),
+            ResponseProperty("brand_group_id", "brand_group_id", Extractors.get("brand_group_id")),
+        ],
+    ),
+    ItemAttributeValue: R(
+        required_properties=[
+            ResponseProperty("id", "id_", Extractors.get("id")),
+            ResponseProperty("text", "text", Extractors.get("text")),
+        ],
+        optional_properties=[],
+    ),
+    ItemAttribute: R(
+        required_properties=[
+            ResponseProperty("id", "id_", Extractors.get("id")),
+            ResponseProperty("text", "text", Extractors.get("text")),
+            ResponseProperty("values", "values", Extractors.get_list_of_model("values", ItemAttributeValue)),
+            ResponseProperty("deep_facet_filterable", "deep_facet_filterable", Extractors.get("deep_facet_filterable")),
+            ResponseProperty("show_on_ui", "show_on_ui", Extractors.get("show_on_ui")),
+        ],
+        optional_properties=[],
+    ),
+    PromotionInstallment: R(
+        required_properties=[
+            ResponseProperty("message", "message", Extractors.get("message")),
+            ResponseProperty("campaign_message", "campaign_message", Extractors.get("campaign_message")),
+            ResponseProperty("campaign_url", "campaign_url", Extractors.get("campaign_url")),
+        ],
+        optional_properties=[],
+    ),
+    Defpay: R(
+        required_properties=[
+            ResponseProperty("calculated_price", "calculated_price", Extractors.get("calculated_price")),
+            ResponseProperty("is_easypay_heavy_user", "is_easypay_heavy_user", Extractors.get("is_easypay_heavy_user")),
+            ResponseProperty("has_ever_used_installment_payment", "has_ever_used_installment_payment", Extractors.get("has_ever_used_installment_payment")),
+            ResponseProperty("installment_monthly_amount", "installment_monthly_amount", Extractors.get("installment_monthly_amount")),
+            ResponseProperty("installment_times", "installment_times", Extractors.get("installment_times")),
+            ResponseProperty("promotion_installment", "promotion_installment", Extractors.get_as_model("promotion_installment", PromotionInstallment)),
+        ],
+        optional_properties=[],
+    ),
+    PromotionInfo: R(
+        required_properties=[
+            ResponseProperty("label_text", "label_text", Extractors.get("label_text")),
+            ResponseProperty("supplementary_text", "supplementary_text", Extractors.get("supplementary_text")),
+        ],
+        optional_properties=[],
+    ),
+    PricePromotionAreaDetails: R(
+        required_properties=[
+            ResponseProperty("promotion_type", "promotion_type", Extractors.get("promotion_type")),
+            ResponseProperty("promotion_info", "promotion_info", Extractors.get_list_of_model("promotion_info", PromotionInfo)),
+        ],
+        optional_properties=[],
+    ),
+    EstimateInfo: R(
+        required_properties=[
+            ResponseProperty("total_rate", "total_rate", Extractors.get("total_rate")),
+            ResponseProperty("mercard_estimate_reward", "mercard_estimate_reward", Extractors.get("mercard_estimate_reward")),
+            ResponseProperty("estimate_reward_text", "estimate_reward_text", Extractors.get("estimate_reward_text")),
+            ResponseProperty("disclaimer_text", "disclaimer_text", Extractors.get("disclaimer_text")),
+            ResponseProperty("lp_url", "lp_url", Extractors.get("lp_url")),
+        ],
+        optional_properties=[],
     ),
     ItemCategory: R(
         required_properties=[
