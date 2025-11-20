@@ -4,6 +4,7 @@ from typing import NamedTuple, List, Dict, TypeVar, Type, Any, Optional, Callabl
 
 from mercapi.models import Item, Items, Profile, SearchResults, SearchResultItem
 from mercapi.models.common import ItemCategory, ItemCategorySummary
+from mercapi.models.search.search_result_item import ItemBrand, ItemSize, Photo, Auction, Shop
 from mercapi.models.item.data import (
     Seller,
     ItemCondition,
@@ -544,6 +545,42 @@ mapping_definitions: Dict[Type[ResponseModel], ResponseMappingDefinition] = {
         ],
         optional_properties=[],
     ),
+    ItemBrand: R(
+        required_properties=[
+            ResponseProperty("id", "id_", Extractors.get("id")),
+            ResponseProperty("name", "name", Extractors.get("name")),
+            ResponseProperty("subName", "sub_name", Extractors.get("subName")),
+        ],
+        optional_properties=[],
+    ),
+    ItemSize: R(
+        required_properties=[
+            ResponseProperty("id", "id_", Extractors.get("id")),
+            ResponseProperty("name", "name", Extractors.get("name")),
+        ],
+        optional_properties=[],
+    ),
+    Photo: R(
+        required_properties=[
+            ResponseProperty("uri", "uri", Extractors.get("uri")),
+        ],
+        optional_properties=[],
+    ),
+    Auction: R(
+        required_properties=[
+            ResponseProperty("id", "id_", Extractors.get("id")),
+            ResponseProperty("bidDeadline", "bid_deadline", Extractors.get("bidDeadline")),
+            ResponseProperty("totalBid", "total_bid", Extractors.get("totalBid")),
+            ResponseProperty("highestBid", "highest_bid", Extractors.get("highestBid")),
+        ],
+        optional_properties=[],
+    ),
+    Shop: R(
+        required_properties=[
+            ResponseProperty("id", "id_", Extractors.get("id")),
+        ],
+        optional_properties=[],
+    ),
     SearchResultItem: R(
         required_properties=[
             ResponseProperty("id", "id_", Extractors.get("id")),
@@ -578,6 +615,41 @@ mapping_definitions: Dict[Type[ResponseModel], ResponseMappingDefinition] = {
                 Extractors.get_as("categoryId", int),
             ),
             ResponseProperty("isNoPrice", "is_no_price", Extractors.get("isNoPrice")),
+            ResponseProperty("buyerId", "buyer_id", Extractors.get("buyerId")),
+            ResponseProperty(
+                "itemSizes",
+                "item_sizes",
+                Extractors.get_list_of_model("itemSizes", ItemSize),
+            ),
+            ResponseProperty(
+                "itemBrand",
+                "item_brand",
+                Extractors.get_as_model("itemBrand", ItemBrand),
+            ),
+            ResponseProperty("itemPromotions", "item_promotions", Extractors.get("itemPromotions")),
+            ResponseProperty("shopName", "shop_name", Extractors.get("shopName")),
+            ResponseProperty(
+                "itemSize",
+                "item_size",
+                Extractors.get_as_model("itemSize", ItemSize),
+            ),
+            ResponseProperty("title", "title", Extractors.get("title")),
+            ResponseProperty("isLiked", "is_liked", Extractors.get("isLiked")),
+            ResponseProperty(
+                "photos",
+                "photos",
+                Extractors.get_list_of_model("photos", Photo),
+            ),
+            ResponseProperty(
+                "auction",
+                "auction",
+                Extractors.get_as_model("auction", Auction),
+            ),
+            ResponseProperty(
+                "shop",
+                "shop",
+                Extractors.get_as_model("shop", Shop),
+            ),
         ],
     ),
     ItemCategory: R(

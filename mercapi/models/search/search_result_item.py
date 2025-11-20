@@ -8,6 +8,42 @@ from mercapi.models.base import ResponseModel
 
 
 @dataclass
+class ItemBrand(ResponseModel):
+    """Brand information for an item"""
+    id_: str
+    name: str
+    sub_name: str
+
+
+@dataclass
+class ItemSize(ResponseModel):
+    """Size information for an item"""
+    id_: str
+    name: str
+
+
+@dataclass
+class Photo(ResponseModel):
+    """Photo information for an item"""
+    uri: str
+
+
+@dataclass
+class Auction(ResponseModel):
+    """Auction information for an item"""
+    id_: str
+    bid_deadline: str
+    total_bid: str
+    highest_bid: str
+
+
+@dataclass
+class Shop(ResponseModel):
+    """Shop information for an item"""
+    id_: str
+
+
+@dataclass
 class SearchResultItem(ResponseModel):
     id_: str
     name: str
@@ -23,6 +59,17 @@ class SearchResultItem(ResponseModel):
     shipping_method_id: int
     category_id: int
     is_no_price: bool  # price==9999999 if True
+    buyer_id: Optional[str] = None
+    item_sizes: Optional[List[ItemSize]] = None
+    item_brand: Optional[ItemBrand] = None
+    item_promotions: Optional[List] = None
+    shop_name: Optional[str] = None
+    item_size: Optional[ItemSize] = None
+    title: Optional[str] = None
+    is_liked: Optional[bool] = None
+    photos: Optional[List[Photo]] = None
+    auction: Optional[Auction] = None
+    shop: Optional[Shop] = None
 
     async def full_item(self) -> "Item":
         return await self._mercapi.item(self.id_)
