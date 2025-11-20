@@ -165,7 +165,7 @@ class Mercapi:
         req = Request(
             "GET",
             "https://api.mercari.jp/items/get",
-            params={"id": id_},
+            params={"id": id_, "include_auction": "true"},
             headers=self._headers,
         )
         return self._sign_request(req)

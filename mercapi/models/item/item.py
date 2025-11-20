@@ -22,6 +22,7 @@ from mercapi.models.item.data import (
     PricePromotionAreaDetails,
     EstimateInfo,
     ParentCategoryNtier,
+    AuctionInfo,
 )
 
 
@@ -87,3 +88,4 @@ class Item(ResponseModel):
     meta_subtitle: str
     price_promotion_area_details: PricePromotionAreaDetails
     estimate_info: EstimateInfo
+    auction_info: AuctionInfo

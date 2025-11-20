@@ -54,6 +54,7 @@ from mercapi.models.item.data import (
     PromotionInfo,
     EstimateInfo,
     ParentCategoryNtier,
+    AuctionInfo,
 )
 from mercapi.util.errors import ParseAPIResponseError
 from mercapi.models.base import ResponseModel
@@ -101,7 +102,7 @@ class Extractors:
     ) -> ExtractorDef[M]:
         if type(model) == str:
             model = Extractors.__import_class(model)
-        return lambda x: map_to_class(x[key], model, map_def) if key in x else None
+        return lambda x: map_to_class(x[key], model, map_def) if key in x and x[key] is not None else None
 
     @staticmethod
     def get_with(key: str, mapper: Callable[[S], T]) -> ExtractorDef[T]:
@@ -115,11 +116,21 @@ class Extractors:
     def get_list_of_model(key: str, model: Type[M]) -> ExtractorDef[List[M]]:
         if type(model) == str:
             model = Extractors.__import_class(model)
-        return lambda x: [map_to_class(i, model) for i in x[key]] if key in x else None
+        return lambda x: [map_to_class(i, model) for i in x[key]] if key in x and x[key] is not None else None
 
     @staticmethod
     def get_datetime(key: str) -> ExtractorDef[datetime]:
         return Extractors.get_with(key, lambda x: datetime.fromtimestamp(float(x)))
+
+    @staticmethod
+    def get_either(*keys: str) -> ExtractorDef[Any]:
+        """Try multiple keys in order, return first non-None value"""
+        def extractor(x):
+            for key in keys:
+                if key in x and x[key] is not None:
+                    return x[key]
+            return None
+        return extractor
 
     @staticmethod
     def __import_class(model: str) -> Type[ResponseModel]:
@@ -328,7 +339,25 @@ mapping_definitions: Dict[Type[ResponseModel], ResponseMappingDefinition] = {
                 "estimate_info",
                 Extractors.get_as_model("estimate_info", EstimateInfo),
             ),
+            ResponseProperty(
+                "auction_info",
+                "auction_info",
+                Extractors.get_as_model("auction_info", AuctionInfo),
+            ),
         ],
+    ),
+    AuctionInfo: R(
+        required_properties=[
+            ResponseProperty("id", "id_", Extractors.get("id")),
+            ResponseProperty("start_time", "start_time", Extractors.get_datetime("start_time")),
+            ResponseProperty("expected_end_time", "expected_end_time", Extractors.get_datetime("expected_end_time")),
+            ResponseProperty("total_bids", "total_bids", Extractors.get_as("total_bids", int)),
+            ResponseProperty("initial_price", "initial_price", Extractors.get_as("initial_price", int)),
+            ResponseProperty("highest_bid", "highest_bid", Extractors.get_as("highest_bid", int)),
+            ResponseProperty("state", "state", Extractors.get("state")),
+            ResponseProperty("auction_type", "auction_type", Extractors.get("auction_type")),
+        ],
+        optional_properties=[],
     ),
     Seller: R(
         required_properties=[
@@ -505,9 +534,11 @@ mapping_definitions: Dict[Type[ResponseModel], ResponseMappingDefinition] = {
         required_properties=[
             ResponseProperty("id", "id_", Extractors.get("id")),
             ResponseProperty("name", "name", Extractors.get("name")),
-            ResponseProperty("sub_name", "sub_name", Extractors.get("sub_name")),
         ],
-        optional_properties=[],
+        optional_properties=[
+            # API inconsistency: search uses "subName" (camelCase), item details uses "sub_name" (snake_case)
+            ResponseProperty("subName|sub_name", "sub_name", Extractors.get_either("subName", "sub_name")),
+        ],
     ),
     ItemAttributeValue: R(
         required_properties=[
