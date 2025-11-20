@@ -801,9 +801,9 @@ mapping_definitions: Dict[Type[ResponseModel], ResponseMappingDefinition] = {
     Auction: R(
         required_properties=[
             ResponseProperty("id", "id_", Extractors.get("id")),
-            ResponseProperty("bidDeadline", "bid_deadline", Extractors.get("bidDeadline")),
-            ResponseProperty("totalBid", "total_bid", Extractors.get("totalBid")),
-            ResponseProperty("highestBid", "highest_bid", Extractors.get("highestBid")),
+            ResponseProperty("bid_deadline", "bid_deadline", Extractors.get("bid_deadline")),
+            ResponseProperty("total_bid", "total_bid", Extractors.get("total_bid")),
+            ResponseProperty("highest_bid", "highest_bid", Extractors.get("highest_bid")),
         ],
         optional_properties=[],
     ),
@@ -812,7 +812,7 @@ mapping_definitions: Dict[Type[ResponseModel], ResponseMappingDefinition] = {
             ResponseProperty("id", "id_", Extractors.get("id")),
         ],
         optional_properties=[
-            ResponseProperty("displayName", "display_name", Extractors.get("displayName")),
+            ResponseProperty("display_name", "display_name", Extractors.get("display_name")),
             ResponseProperty("thumbnail", "thumbnail", Extractors.get("thumbnail")),
         ],
     ),
@@ -823,50 +823,50 @@ mapping_definitions: Dict[Type[ResponseModel], ResponseMappingDefinition] = {
             ResponseProperty("price", "price", Extractors.get_as("price", int)),
         ],
         optional_properties=[
-            ResponseProperty("sellerId", "seller_id", Extractors.get("sellerId")),
+            ResponseProperty("seller_id", "seller_id", Extractors.get("seller_id")),
             ResponseProperty("status", "status", Extractors.get("status")),
             ResponseProperty("created", "created", Extractors.get_datetime("created")),
             ResponseProperty("updated", "updated", Extractors.get_datetime("updated")),
             ResponseProperty("thumbnails", "thumbnails", Extractors.get("thumbnails")),
-            ResponseProperty("itemType", "item_type", Extractors.get("itemType")),
+            ResponseProperty("item_type", "item_type", Extractors.get("item_type")),
             ResponseProperty(
-                "itemConditionId",
                 "item_condition_id",
-                Extractors.get_as("itemConditionId", int),
+                "item_condition_id",
+                Extractors.get_as("item_condition_id", int),
             ),
             ResponseProperty(
-                "shippingPayerId",
                 "shipping_payer_id",
-                Extractors.get_as("shippingPayerId", int),
+                "shipping_payer_id",
+                Extractors.get_as("shipping_payer_id", int),
             ),
             ResponseProperty(
-                "shippingMethodId",
                 "shipping_method_id",
-                Extractors.get_as("shippingMethodId", int),
+                "shipping_method_id",
+                Extractors.get_as("shipping_method_id", int),
             ),
             ResponseProperty(
-                "categoryId",
                 "category_id",
-                Extractors.get_as("categoryId", int),
+                "category_id",
+                Extractors.get_as("category_id", int),
             ),
-            ResponseProperty("isNoPrice", "is_no_price", Extractors.get("isNoPrice")),
-            ResponseProperty("buyerId", "buyer_id", Extractors.get("buyerId")),
+            ResponseProperty("is_no_price", "is_no_price", Extractors.get("is_no_price")),
+            ResponseProperty("buyer_id", "buyer_id", Extractors.get("buyer_id")),
             ResponseProperty("title", "title", Extractors.get("title")),
-            ResponseProperty("isLiked", "is_liked", Extractors.get("isLiked")),
+            ResponseProperty("liked", "is_liked", Extractors.get("liked")),
             ResponseProperty(
-                "itemSizes",
                 "item_sizes",
-                Extractors.get_list_of_model("itemSizes", ItemSize),
+                "item_sizes",
+                Extractors.get_list_of_model("item_sizes", ItemSize),
             ),
             ResponseProperty(
-                "itemBrand", "item_brand", Extractors.get_as_model("itemBrand", ItemBrand)
+                "item_brand", "item_brand", Extractors.get_as_model("item_brand", ItemBrand)
             ),
             ResponseProperty(
-                "itemPromotions", "item_promotions", Extractors.get("itemPromotions")
+                "item_promotions", "item_promotions", Extractors.get("item_promotions")
             ),
-            ResponseProperty("shopName", "shop_name", Extractors.get("shopName")),
+            ResponseProperty("shop_name", "shop_name", Extractors.get("shop_name")),
             ResponseProperty(
-                "itemSize", "item_size", Extractors.get_as_model("itemSize", ItemSize)
+                "item_size", "item_size", Extractors.get_as_model("item_size", ItemSize)
             ),
             ResponseProperty(
                 "photos", "photos", Extractors.get_list_of_model("photos", PhotoUri)
