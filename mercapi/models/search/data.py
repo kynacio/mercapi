@@ -10,10 +10,10 @@ class PhotoUri(ResponseModel):
 
 @dataclass
 class Auction(ResponseModel):
-    id_: str
-    bid_deadline: str
-    total_bid: str
-    highest_bid: str
+    id_: str = None
+    bid_deadline: str = None
+    total_bid: str = None
+    highest_bid: str = None
 
 
 @dataclass

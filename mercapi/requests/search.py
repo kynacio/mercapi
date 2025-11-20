@@ -46,9 +46,16 @@ class SearchRequestData(RequestData):
             default_factory=list
         )
         status: List["SearchRequestData.Status"] = field(default_factory=list)
-        sort_by: "SearchRequestData.SortBy" = 1
-        sort_order: "SearchRequestData.SortOrder" = 1
+        sort_by: "SearchRequestData.SortBy" = field(default=None)
+        sort_order: "SearchRequestData.SortOrder" = field(default=None)
         exclude: str = ""
+
+        def __post_init__(self):
+            # Set defaults after initialization if not provided
+            if self.sort_by is None:
+                self.sort_by = SearchRequestData.SortBy.SORT_SCORE
+            if self.sort_order is None:
+                self.sort_order = SearchRequestData.SortOrder.ORDER_DESC
 
     search_conditions: SearchConditions
     page_token: str = ""
@@ -82,10 +89,12 @@ class SearchRequestData(RequestData):
             "pageSize": 120,
             "pageToken": self.page_token,
             "searchSessionId": uuid.uuid4().hex,
+            "source": "BaseSerp",
             "indexRouting": "INDEX_ROUTING_UNSPECIFIED",
             "thumbnailTypes": [],
             "searchCondition": {
                 "keyword": self.search_conditions.query,
+                "excludeKeyword": self.search_conditions.exclude,
                 "sort": self.search_conditions.sort_by.name,
                 "order": self.search_conditions.sort_order.name,
                 "status": status,
@@ -104,8 +113,22 @@ class SearchRequestData(RequestData):
                 "attributes": [],
                 "itemTypes": [],
                 "skuIds": [],
-                "excludeKeyword": self.search_conditions.exclude,
+                "shopIds": [],
+                "excludeShippingMethodIds": [],
             },
-            "defaultDatasets": [],
             "serviceFrom": "suruga",
+            "withItemBrand": True,
+            "withItemSize": False,
+            "withItemPromotions": True,
+            "withItemSizes": True,
+            "withShopname": False,
+            "useDynamicAttribute": True,
+            "withSuggestedItems": True,
+            "withOfferPricePromotion": True,
+            "withProductSuggest": True,
+            "withParentProducts": False,
+            "withProductArticles": True,
+            "withSearchConditionId": False,
+            "withAuction": True,
+            "laplaceDeviceUuid": uuid.uuid4().hex,
         }
